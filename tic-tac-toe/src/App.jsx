@@ -57,7 +57,13 @@ function App() {
         return null
     }
 
-    const updateBoardAndChangeTurn = (index) => {
+    const resetGame = () => {
+        setBoard(Array(9).fill(null))
+        setTurn(TURNS.X)
+        setWinner(null)
+    }
+
+    const updateActions = (index) => {
         if (board[index] || winner) return
 
         const newBoard = [...board]
@@ -73,6 +79,8 @@ function App() {
 
         const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
         setTurn(newTurn)
+
+
     }
 
     return (
@@ -85,7 +93,7 @@ function App() {
                             <Square
                                 key={index}
                                 index={index}
-                                updateBoard={updateBoardAndChangeTurn}
+                                updateBoard={updateActions}
                             >
                                 {board[index]}
                             </Square>
@@ -101,6 +109,28 @@ function App() {
                     {TURNS.O}
                 </Square>
             </section>
+            {
+                winner !== null && (
+                    <section className="winner">
+                        <div className="text">
+                            <h2>
+                                {
+                                    winner === WINNERS.TIE
+                                        ? ''
+                                        : 'Winner is:'
+                                }
+                            </h2>
+                            <header className={"win"}>
+                                {winner && <Square>{winner}</Square>}
+                            </header>
+
+                            <footer>
+                                <button onClick={resetGame}>Empezar de nuevo</button>
+                            </footer>
+                        </div>
+                    </section>
+                )
+            }
         </main>
     )
 }
