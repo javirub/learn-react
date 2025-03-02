@@ -1,11 +1,11 @@
 export const TURNS = {
-    X: 'x',
-    O: 'o'
+    X: '❌',
+    O: '⭕'
 }
 
 export const WINNERS = {
-    X: 'x',
-    O: 'o',
+    X: '❌',
+    O: '⭕',
     TIE: 'Tie'
 }
 
