@@ -1,40 +1,9 @@
 import './App.css'
 import {useState} from "react";
+import {Square} from "./components/Square.jsx";
+import {TURNS, WINNERS} from "./constants.js";
+import {checkWinner} from "./logic/board.js";
 
-const TURNS = {
-    X: 'x',
-    O: 'o'
-}
-
-const WINNERS = {
-    X: 'x',
-    O: 'o',
-    TIE: 'Tie'
-}
-
-const WINNING_COMBINATIONS = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-]
-
-const Square = ({children, isSelected, updateBoard, index}) => {
-    const className = `square ${isSelected ? 'is-selected' : ''}`
-
-    const handleClick = () => {
-        updateBoard(index)
-    }
-    return (
-        <div onClick={handleClick} className={className}>
-            {children}
-        </div>
-    )
-}
 
 function App() {
     const [board, setBoard] = useState(
@@ -43,19 +12,6 @@ function App() {
 
     const [turn, setTurn] = useState(TURNS.X)
     const [winner, setWinner] = useState(null)
-
-    const checkWinner = (boardToCheck) => {
-        for (const combination of WINNING_COMBINATIONS) {
-            const [a, b, c] = combination
-            if
-                (boardToCheck[a] &&
-                boardToCheck[a] === boardToCheck[b] &&
-                boardToCheck[a] === boardToCheck[c]) {
-                return boardToCheck[a] === TURNS.X ? WINNERS.X : WINNERS.O;
-                }
-        }
-        return null
-    }
 
     const resetGame = () => {
         setBoard(Array(9).fill(null))
@@ -73,29 +29,26 @@ function App() {
         const newWinner = checkWinner(newBoard)
         if (newWinner) {
             setWinner(newWinner)
-        } else if (newBoard.every(square => square !== null)) {
-            setWinner(WINNERS.TIE)
         }
 
         const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
         setTurn(newTurn)
-
-
     }
 
     return (
         <main className='board'>
             <h1>Tic Tac Toe</h1>
+            <button onClick={resetGame}>Reset game</button>
             <section className="game">
                 {
-                    board.map((_, index) => {
+                    board.map((square, index) => {
                         return (
                             <Square
                                 key={index}
                                 index={index}
                                 updateBoard={updateActions}
                             >
-                                {board[index]}
+                                {square}
                             </Square>
                         )
                     })
@@ -120,7 +73,7 @@ function App() {
                                         : 'Winner is:'
                                 }
                             </h2>
-                            <header className={"win"}>
+                            <header className="win">
                                 {winner && <Square>{winner}</Square>}
                             </header>
 
